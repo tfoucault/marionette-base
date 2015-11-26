@@ -2,7 +2,7 @@
   "name": "marionette-base",
   "description": "Give a base for web application using Marionette",
   "homepage": "https://github.com/tfoucault/marionette-base",
-  "main": "./scripts/main.js",
+  "main": "./public/scripts/main.js",
   "version": "1.0.0",
   "repository": {
     "type": "git",
