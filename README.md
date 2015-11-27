@@ -22,3 +22,19 @@ The aim of this project is to give a base for web application using Marionette. 
 
 [bootstrap](http://getbootstrap.com/) : Responsive HTML, CSS framework
 
+## Installation
+
+To install all dependencies, you first need to install node.js that you can download there :  [download node.js](https://nodejs.org/en/download/)
+
+After installation, add node.js root installation folder in your PATH env variable
+
+Then npm (node package manager) should be available on command line so you can install bower : 
+
+`npm install bower -g`
+
+Once bower installed, go to project root folder (Marionnette_Base) and run command : 
+
+`bower install`
+
+
+
