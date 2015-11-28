@@ -50,9 +50,10 @@ define(['app', 'backbone.radio'], function(app, Radio) {
   'use strict';
 
   app.start();
-
   // Test that bacbone radio is working
   var mainChannel = Radio.channel('main');
   mainChannel.trigger('app:started');
 
+  var appStatus = mainChannel.request('app:status');
+  console.log('Application is ' + appStatus);
 });

@@ -19,6 +19,11 @@ define(function(require) {
   // Test that backbone radio is working
   mainChannel.on('app:started', function() {
     console.log('Application started successfully');
+    this.status = 'running';
+  });
+
+  mainChannel.reply('app:status', function() {
+    return this.status;
   });
 
   return app;
