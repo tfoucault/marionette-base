@@ -8,7 +8,9 @@ define(function(require) {
   'use strict';
 
   var Marionette = require('marionette'),
-      Radio = require('backbone.radio');
+      Radio = require('backbone.radio'),
+      RootView = require('./views/root-view'),
+      MainView = require('./views/main-view');
 
   // Creation of marionette application
   var app = new Marionette.Application();
@@ -24,6 +26,14 @@ define(function(require) {
 
   mainChannel.reply('app:status', function() {
     return this.status;
+  });
+
+  app.rootView = new RootView();
+  app.rootView.render();
+
+  // When app is started, show main view
+  app.on('start', function() {
+    app.rootView.getRegion('mainRegion').show(new MainView());
   });
 
   return app;

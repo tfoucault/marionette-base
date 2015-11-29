@@ -15,7 +15,8 @@ require.config({
     'marionette.radio' : './utils/marionette.radio',
     'jquery' : '../vendors/jquery/dist/jquery.min',
     'handlebars' : '../vendors/handlebars/handlebars.min',
-    'bootstrap' : '../vendors/bootstrap/dist/js/bootstrap.min'
+    'bootstrap' : '../vendors/bootstrap/js',
+    'templates' : './tpls/precompiled.handlebars'
   },
   enforceDefine: true,
   map: {
@@ -42,7 +43,17 @@ require.config({
       exports : 'Backbone.Marionette',
       deps : ['backbone','backbone.wreqr','backbone.babysitter']
     },
-    deps : ['jquery','underscore']
+    'bootstrap/alert':      { deps: ['jquery'], exports: '$.fn.alert' },
+    'bootstrap/button':     { deps: ['jquery'], exports: '$.fn.button' },
+    'bootstrap/carousel':   { deps: ['jquery'], exports: '$.fn.carousel' },
+    'bootstrap/collapse':   { deps: ['jquery'], exports: '$.fn.collapse' },
+    'bootstrap/dropdown':   { deps: ['jquery'], exports: '$.fn.dropdown' },
+    'bootstrap/modal':      { deps: ['jquery'], exports: '$.fn.modal' },
+    'bootstrap/popover':    { deps: ['jquery'], exports: '$.fn.popover' },
+    'bootstrap/scrollspy':  { deps: ['jquery'], exports: '$.fn.scrollspy' },
+    'bootstrap/tab':        { deps: ['jquery'], exports: '$.fn.tab'        },
+    'bootstrap/tooltip':    { deps: ['jquery'], exports: '$.fn.tooltip' },
+    'bootstrap/transition': { deps: ['jquery'], exports: '$.fn.transition' }
   }
 });
 
@@ -50,6 +61,7 @@ define(['app', 'backbone.radio'], function(app, Radio) {
   'use strict';
 
   app.start();
+
   // Test that bacbone radio is working
   var mainChannel = Radio.channel('main');
   mainChannel.trigger('app:started');
