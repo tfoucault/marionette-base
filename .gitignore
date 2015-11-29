@@ -1,1 +1,4 @@
+node_modules/
+/public/vendors/
+/public/scripts/tpls/precompiled.handlebars.js
 # Created by .ignore support plugin (hsz.mobi)
