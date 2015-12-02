@@ -11,6 +11,7 @@ require.config({
     'backbone.radio' : '../vendors/backbone.radio/build/backbone.radio.min',
     'backbone.wreqr' : '../vendors/backbone.wreqr/lib/backbone.wreqr.min',
     'backbone.babysitter' : '../vendors/backbone.babysitter/lib/backbone.babysitter.min',
+    'backbone.routefilter' : '../vendors/backbone.routefilter/dist/backbone.routefilter.min',
     'marionette' : '../vendors/marionette/lib/core/backbone.marionette.min',
     'marionette.radio' : './utils/marionette.radio',
     'jquery' : '../vendors/jquery/dist/jquery.min',

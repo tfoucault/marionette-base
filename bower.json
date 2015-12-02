@@ -21,6 +21,7 @@
     "marionette": "2.4.4",
     "backbone.radio": "~1.0.0",
     "handlebars": "~4.0.5",
-    "bootstrap": "~3.3.5"
+    "bootstrap": "~3.3.5",
+    "backbone.routefilter": "routefilter#~0.2.1"
   }
 }
