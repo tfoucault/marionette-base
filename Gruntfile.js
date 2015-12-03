@@ -12,7 +12,7 @@ module.exports = function(grunt) {
           // Wraps templates into define amd block
           amd: true
         },
-        src: ["public/templates/**/*.html"],
+        src: ["public/templates/**/*.hbs"],
         dest: "public/scripts/tpls/precompiled.handlebars.js"
       }
     }

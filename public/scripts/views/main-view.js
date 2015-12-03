@@ -7,7 +7,7 @@ define(['marionette','templates'], function(Marionette, JST) {
 	var MainView = Marionette.ItemView.extend({
 		tagName: 'div',
 		className: 'starter-template',
-		template: JST["public/templates/main-view.html"]
+		template: JST["public/templates/main-view.hbs"]
     });
 
     return MainView;

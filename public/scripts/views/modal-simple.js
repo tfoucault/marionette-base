@@ -11,7 +11,7 @@ define(['marionette','templates','bootstrap/modal'], function(Marionette, JST) {
 
 		tagName: 'div',
 		className: 'modal fade',
-		template: JST["public/templates/modal-simple.html"],
+		template: JST["public/templates/modal-simple.hbs"],
 
 		initialize: function() {
 
