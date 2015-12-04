@@ -12,9 +12,11 @@ require.config({
     'backbone.wreqr' : '../vendors/backbone.wreqr/lib/backbone.wreqr.min',
     'backbone.babysitter' : '../vendors/backbone.babysitter/lib/backbone.babysitter.min',
     'backbone.routefilter' : '../vendors/backbone.routefilter/dist/backbone.routefilter.min',
+    'backbone.paginator': '../vendors/backbone.paginator/lib/backbone.paginator.min',
     'marionette' : '../vendors/marionette/lib/core/backbone.marionette.min',
     'marionette.radio' : './utils/marionette.radio',
     'jquery' : '../vendors/jquery/dist/jquery.min',
+    'jquery.mockjax': '../vendors/jquery-mockjax/dist/jquery.mockjax.min',
     'handlebars' : '../vendors/handlebars/handlebars.min',
     'bootstrap' : '../vendors/bootstrap/js',
     'templates' : './tpls/precompiled.handlebars'
@@ -58,7 +60,7 @@ require.config({
   }
 });
 
-define(['app', 'backbone.radio'], function(app, Radio) {
+define(['app', 'backbone.radio','utils/mock.webservice'], function(app, Radio) {
   'use strict';
 
   app.start();

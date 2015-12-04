@@ -22,6 +22,10 @@
     "backbone.radio": "~1.0.0",
     "handlebars": "~4.0.5",
     "bootstrap": "~3.3.5",
-    "backbone.routefilter": "routefilter#~0.2.1"
+    "backbone.routefilter": "routefilter#~0.2.1",
+    "backbone.paginator": "~2.0.2"
+  },
+  "devDependencies": {
+    "jquery-mockjax": "~2.0.1"
   }
 }
