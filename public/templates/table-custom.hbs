@@ -1,0 +1,23 @@
+<table class="table">
+    <thead>
+        {{#if columns.hasLabels}}
+        <tr>
+            {{#each columns}}
+                <td>{{label}}</td>
+            {{/each}}
+        </tr>
+        {{else}}
+        {{/if}}
+    </thead>
+    <tfoot>
+    </tfoot>
+    <tbody>
+        {{#each rows}}
+            <tr>
+                {{#each this}}
+                    <td>{{this}}</td>
+                {{/each}}
+            </tr>
+        {{/each}}
+    </tbody>
+</table>
