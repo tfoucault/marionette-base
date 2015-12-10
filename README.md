@@ -51,4 +51,20 @@ You can then compile your handlebars templates by running the command in root fo
 Template will be precompiled and available in file public/scripts/tpls/precompiled.handlebars.js
 
 
+You can also process your less styles by running the command in root folder (Marionnette_Base) :
 
+* `grunt less:development` for dev release
+* `grunt less:production` for prod release
+
+Less files will be available in :
+
+* public/styles for development release
+* public/dist/css for production release
+
+Once styles have been processed for production release, it's possible to minify css files with : 
+
+`grunt cssmin`
+
+and concat them into a unique file with : 
+
+`grunt concat:css`
