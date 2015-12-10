@@ -23,7 +23,8 @@
     "handlebars": "~4.0.5",
     "bootstrap": "~3.3.5",
     "backbone.routefilter": "routefilter#~0.2.1",
-    "backbone.paginator": "~2.0.2"
+    "backbone.paginator": "~2.0.2",
+    "font-awesome": "fontawesome#~4.5.0"
   },
   "devDependencies": {
     "jquery-mockjax": "~2.0.1"
