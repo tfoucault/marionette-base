@@ -8,7 +8,7 @@ define(['marionette','templates','backbone.radio'], function(Marionette, JST, Ra
   var RootView = Marionette.LayoutView.extend({
 
     el: 'body',
-    template: JST['public/templates/root-view.hbs'],
+    template: JST['public/templates/root-template.hbs'],
 
     // Add regions to our main layout
     regions: {
