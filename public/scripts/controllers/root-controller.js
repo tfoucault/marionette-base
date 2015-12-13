@@ -2,8 +2,11 @@
  * Created by tfoucault on 02/12/2015.
  */
 
-define(['marionette','views/root-view','views/main-view'], function(Marionette, RootView, MainView) {
+define(['marionette','backbone.radio','views/root-view','views/main-view'], function(Marionette, Radio, RootView, MainView) {
     "use strict";
+
+    var tableChannel = Radio.channel('table');
+    var mainChannel = Radio.channel('main');
 
     var RootController = Marionette.Object.extend({
 
@@ -13,7 +16,7 @@ define(['marionette','views/root-view','views/main-view'], function(Marionette, 
 
         home: function() {
             this.rootView.render();
-            this.rootView.getRegion('mainRegion').show(new MainView());
+            mainChannel.trigger('init', this.rootView.getRegion('mainRegion'));
         }
     });
 

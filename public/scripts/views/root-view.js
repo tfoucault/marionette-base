@@ -2,7 +2,7 @@
  * Created by tfoucault on 29/11/2015.
  */
 
-define(['marionette','templates','backbone.radio'], function(Marionette, JST, Radio){
+define(['marionette','templates'], function(Marionette, JST){
 
   // Root view for our application
   var RootView = Marionette.LayoutView.extend({
@@ -12,20 +12,7 @@ define(['marionette','templates','backbone.radio'], function(Marionette, JST, Ra
 
     // Add regions to our main layout
     regions: {
-      mainRegion: "#main-content",
-      modalRegion: "#modal-content"
-    },
-
-    initialize: function() {
-      // Get the channel whom name is 'main'
-      var mainChannel = Radio.channel('main');
-      // Listen to views that want to display a modal content
-      this.listenTo(mainChannel, 'modal:show', this.showModal);
-    },
-
-    showModal: function(params) {
-      var modal = params.modal;
-      this.modalRegion.show(modal);
+      mainRegion: "#main-content"
     }
   });
 

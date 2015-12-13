@@ -13,16 +13,28 @@ define(['marionette','templates','bootstrap/modal'], function(Marionette, JST) {
 		className: 'modal fade',
 		template: JST["public/templates/modal-template.hbs"],
 
-		initialize: function() {
+		initialize: function(model) {
 
 			// Default values are set
-			this.model = this.model ||
+			this.model = (_.keys(model)).length ? model :
 			{
 				modalTitle: "Confirmation",
 				modalMessage: "Would you confirme this choice ?",
 				modalConfirm: "Yes",
 				modalDismiss: "No"
 			};
+
+			this.callback = {
+				confirm: function() {
+					console.log("confirmed modal");
+				},
+				dismiss: function() {
+					console.log("dismissed modal");
+				},
+				done: function() {
+					console.log('closed modal');
+				}
+			}
 		},
 
 		events: {
@@ -33,16 +45,16 @@ define(['marionette','templates','bootstrap/modal'], function(Marionette, JST) {
 
 		dismissModal: function() {
 			this.$el.modal('hide');
-			this.callback.dismiss();
+			if(this.callback.dismiss) this.callback.dismiss();
 		},
 
 		confirmModal: function() {
 			this.$el.modal('hide');
-			this.callback.confirm();
+			if(this.callback.confirm) this.callback.confirm();
 		},
 
 		closedModal: function() {
-			this.callback.done();
+			if(this.callback.done) this.callback.done();
 		},
 
 		onResponse: function(callback) {

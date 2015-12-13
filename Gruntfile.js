@@ -20,13 +20,15 @@ module.exports = function(grunt) {
     "less": {
       development: {
         files: {
-          "public/styles/starter-template.css": "public/styles/starter-template.less"
+          "public/styles/starter-template.css": "public/styles/starter-template.less",
+          "public/styles/table-style.css": "public/styles/table-style.less"
         }
       },
       // Only process to create prod release
       production: {
         files: {
-          "public/dist/css/starter-template.css": "public/styles/starter-template.less"
+          "public/dist/css/starter-template.css": "public/styles/starter-template.less",
+          "public/dist/css/table-style.css": "public/styles/table-style.less"
         }
       }
     },
@@ -48,7 +50,8 @@ module.exports = function(grunt) {
     concat: {
       css: {
         src: [
-          'public/dist/css/starter-template.min.css'
+          'public/dist/css/starter-template.min.css',
+          'public/dist/css/table-style.min.css'
         ],
         dest: 'public/dist/style.min.css'
       }

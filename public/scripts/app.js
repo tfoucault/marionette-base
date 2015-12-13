@@ -8,9 +8,10 @@ define(function(require) {
   'use strict';
 
   var Marionette = require('marionette'),
-      Backbone = require('backbone'),
       Radio = require('backbone.radio'),
-      IndexRouter = require('routers/index');
+      IndexRouter = require('routers/index'),
+      MainController = require('controllers/main-controller'),
+      TableController = require('controllers/table-controller');
 
   // Creation of marionette application
   var app = new Marionette.Application();
@@ -31,6 +32,8 @@ define(function(require) {
   // When app is started, show main view
   app.on('start', function() {
     new IndexRouter();
+    new MainController();
+    new TableController();
     Backbone.history.start();
   });
 

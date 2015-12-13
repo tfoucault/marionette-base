@@ -3,7 +3,10 @@
         {{#if columns.hasLabels}}
         <tr>
             {{#each columns}}
-                <td>{{label}}</td>
+                <td>
+                    {{label}}
+                    <i class="fa fa-sort" data-sort-field="{{target}}" data-sort-order="any"></i>
+                </td>
             {{/each}}
         </tr>
         {{else}}
