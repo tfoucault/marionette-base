@@ -63,4 +63,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-less');
+
+  // Task to run in dev when templates or styles change
+  grunt.registerTask('dev','Automated tasks for dev', ['handlebars:compile','less:development']);
+  grunt.registerTask('dist','Create distant package for prod', ['handlebars:compile','less:production','cssmin','concat']);
 };
