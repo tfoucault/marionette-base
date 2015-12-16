@@ -44,24 +44,43 @@ So just run :
 
 `npm install`
 
-You can then compile your handlebars templates by running the command in root folder (Marionnette_Base) :
+At first time and after changes are done on template (.hbs files) or styles (.less files) it is necessary to run : 
+
+`grunt dev`
+
+Details of this grunt 'dev' task is :
+
+***
+
+Compile your handlebars templates by running the command :
 
 `grunt handlebars:compile`
 
 Template will be precompiled and available in file public/scripts/tpls/precompiled.handlebars.js
 
+Process your less styles by running the command :
 
-You can also process your less styles by running the command in root folder (Marionnette_Base) :
+`grunt less:development` for dev release
 
-* `grunt less:development` for dev release
-* `grunt less:production` for prod release
+Less files will be available in public/styles for development release
 
-Less files will be available in :
+***
 
-* public/styles for development release
-* public/dist/css for production release
+To create a prod package, it is necessary to run : 
 
-Once styles have been processed for production release, it's possible to minify css files with : 
+`grunt dist`
+
+Details of this grunt 'dist' task is :
+ 
+***
+
+Process your less styles by running the command :
+
+`grunt less:production` for prod release
+
+Less files will be available in public/dist/css for production release
+
+Minifiying css files by running the command : 
 
 `grunt cssmin`
 
