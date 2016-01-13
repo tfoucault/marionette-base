@@ -2,7 +2,7 @@
  * Created by tfoucault on 03/12/2015.
  */
 
-define(['marionette','backbone.radio','templates'], function(Marionette, Radio, JST) {
+define(['marionette','backbone.radio','templates','fixed-header'], function(Marionette, Radio, JST) {
     "use strict";
 
     var tableChannel = Radio.channel('table');
@@ -18,7 +18,7 @@ define(['marionette','backbone.radio','templates'], function(Marionette, Radio, 
         },
 
         events: {
-            "click thead i": "toggleSort"
+            "click thead a": "toggleSort"
         },
 
         // Display table with options
@@ -32,6 +32,13 @@ define(['marionette','backbone.radio','templates'], function(Marionette, Radio, 
             }
 
             this.$el.html(this.template(this.options));
+
+            // Set header fixed and body scrollable
+            this.$el.children('table').fixedHeaderTable({
+                height: 500,
+                footer: true,
+                cloneHeadToFoot: true
+            });
 
             var sortClass = "";
             var sortOrder = "";
@@ -49,8 +56,8 @@ define(['marionette','backbone.radio','templates'], function(Marionette, Radio, 
 
             // Initialization of sorted columns
             $('[data-sort-field="' + this.options.sortField + '"]')
-                .removeClass().addClass(sortClass)
-                .data('sort-order', sortOrder);
+                .data('sort-order', sortOrder)
+                .next().removeClass().addClass(sortClass);
         },
 
         toggleSort: function(e) {

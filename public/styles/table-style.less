@@ -1,7 +1,105 @@
 .table-view {
+  margin-top: 25px;
+}
+
+.fht-table {
+  /* appearance */
+  border-collapse: collapse;
+  border-spacing: 0;
+
+  .fht-table-common;
+
   thead {
-    i {
+    .fht-table-common;
+    th {
+      text-align: center;
+    }
+    a {
       cursor: pointer;
+      text-decoration: none;
     }
   }
+
+  tfoot,
+  tbody,
+  tr,
+  th,
+  td {
+    .fht-table-common;
+  }
+}
+
+.fht-table-common {
+  /* position */
+  margin: 0;
+
+  /* size */
+  padding: 0;
+
+  /* text */
+  font-size: 100%;
+  font: inherit;
+  vertical-align: top;
+}
+
+/* @end */
+
+/* @group Content */
+
+.fht-table-wrapper {
+
+  .fht-table-wrapper-common;
+
+  .fht-thead,
+  .fht-foot,
+  .fht-fixed-column {
+    .fht-tbody {
+      .fht-table-wrapper-common;
+    }
+  }
+  .fht-fixed-body {
+    .fht-tbody {
+      .fht-table-wrapper-common-body;
+    }
+  }
+  .fht-tbody {
+    .fht-table-wrapper-common-body;
+  }
+
+  .fht-table {
+    .fht-cell {
+      /* appearance */
+      overflow: hidden;
+
+      /* size */
+      height: 1px;
+    }
+  }
+}
+
+.fht-table-wrapper-common {
+  /* appearance */
+  overflow: hidden;
+
+  /* position */
+  position: relative;
+}
+
+.fht-table-wrapper-common-body {
+  .fht-table-wrapper-common;
+  /* appearance */
+  overflow: auto;
+}
+
+.fht-table-wrapper .fht-fixed-column,
+.fht-table-wrapper .fht-fixed-body {
+  /* position */
+  top: 0;
+  left: 0;
+  position: absolute;
+}
+
+.fht-table-wrapper .fht-fixed-column {
+  /* position */
+  z-index: 1;
 }

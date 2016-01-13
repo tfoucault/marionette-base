@@ -71,6 +71,7 @@ define(['marionette','backbone.radio','../views/table-view'], function(Marionett
 
                 // Display populated table
                 tableRegion.show(tableView);
+                tableView.render();
             });
         },
 

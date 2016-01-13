@@ -19,7 +19,8 @@ require.config({
     'jquery.mockjax': '../vendors/jquery-mockjax/dist/jquery.mockjax.min',
     'handlebars' : '../vendors/handlebars/handlebars.min',
     'bootstrap' : '../vendors/bootstrap/js',
-    'templates' : './tpls/precompiled.handlebars'
+    'templates' : './tpls/precompiled.handlebars',
+    'fixed-header' : '../vendors/fixed-header/jquery.fixedheadertable.min'
   },
   enforceDefine: true,
   map: {
@@ -56,7 +57,8 @@ require.config({
     'bootstrap/scrollspy':  { deps: ['jquery'], exports: '$.fn.scrollspy' },
     'bootstrap/tab':        { deps: ['jquery'], exports: '$.fn.tab'        },
     'bootstrap/tooltip':    { deps: ['jquery'], exports: '$.fn.tooltip' },
-    'bootstrap/transition': { deps: ['jquery'], exports: '$.fn.transition' }
+    'bootstrap/transition': { deps: ['jquery'], exports: '$.fn.transition' },
+    'fixed-header': { deps: ['jquery'], exports: '$.fn.fixedHeaderTable'}
   }
 });
 

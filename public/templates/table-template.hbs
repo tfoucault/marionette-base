@@ -3,17 +3,14 @@
         {{#if columns.hasLabels}}
         <tr>
             {{#each columns}}
-                <td>
-                    {{label}}
-                    <i class="fa fa-sort" data-sort-field="{{target}}" data-sort-order="any"></i>
-                </td>
+                <th>
+                    <a class="col-header" data-sort-field="{{target}}" data-sort-order="any">{{label}}</a>
+                    <i class="fa fa-sort"></i>
+                </th>
             {{/each}}
         </tr>
-        {{else}}
         {{/if}}
     </thead>
-    <tfoot>
-    </tfoot>
     <tbody>
         {{#each rows}}
             <tr>
