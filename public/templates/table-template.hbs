@@ -2,6 +2,7 @@
     <thead>
         {{#if columns.hasLabels}}
         <tr>
+            <th>#</th>
             {{#each columns}}
                 <th>
                     <a class="col-header" data-sort-field="{{target}}" data-sort-order="any">{{label}}</a>
@@ -14,6 +15,7 @@
     <tbody>
         {{#each rows}}
             <tr>
+                <td>{{@index}}</td>
                 {{#each this}}
                     <td>{{this}}</td>
                 {{/each}}

@@ -10,7 +10,10 @@ define(['backbone','../models/data','backbone.paginator'], function(Backbone, Da
         url: '/test/data',
         // Initial pagination state
         state: {
-            pageSize: 15
+            firstPage: 0,
+            pageSize: 15,
+            sortKey: 'age',
+            order: '1'
         },
         mode: 'server',
         queryParams: {

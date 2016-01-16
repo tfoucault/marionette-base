@@ -16,13 +16,15 @@
     "name": "Thibault Foucault",
     "email": "thibault.foucault@gmail.com"
   },
-  "dependencies": {},
   "devDependencies": {
+    "express": "^4.13.3",
     "grunt": "^0.4.5",
     "grunt-contrib-concat": "^0.5.1",
     "grunt-contrib-cssmin": "^0.14.0",
     "grunt-contrib-handlebars": "^0.11.0",
     "grunt-contrib-less": "^1.1.0",
-    "less": "^2.5.3"
+    "less": "^2.5.3",
+    "lodash": "^4.0.0",
+    "path": "^0.12.7"
   }
 }

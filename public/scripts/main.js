@@ -62,7 +62,19 @@ require.config({
   }
 });
 
-define(['app', 'backbone.radio','utils/mock.webservice'], function(app, Radio) {
+/*
+If we want to mock data on client side, just uncomment ,'utils/mock.webservice'
+The webapp could be served by a local webserver (wamp) or one embedded in your
+ide. If you use IntelliJIDEA, a local server is available at localhost:63342 so
+it can serve static files from public directory.
+
+Else, if you want to mock data from server keep commented it above and run the
+mock-server.js file which is in "server" directory with node.js. It will serve
+index.html file and all associated static resources at localhost:3000
+
+==> By default, mock data from server by launching mock-server.js !
+ */
+define(['app', 'backbone.radio'/*,'utils/mock.webservice'*/], function(app, Radio) {
   'use strict';
 
   app.start();

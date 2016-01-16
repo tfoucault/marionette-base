@@ -51,8 +51,13 @@ define(['marionette','backbone.radio','../views/table-view'], function(Marionett
             // Keep reference on this
             var _this = this;
 
-            // When collection is fetched, show the populated paginated table
-            tableCollection.getPage(1).done(function(collection, response) {
+            /* When collection is fetched, show the populated paginated table
+             -- If we use fetch on pageable collection, it get the page which
+             is defined in the pageable collection, attribute state.firstPage
+             -- If we want to get an other page, we should replace fetch() by
+             getPage(pageNumber) where pageNumber is the page we want to have
+            */
+            tableCollection.fetch().done(function(collection, response) {
 
                 // Set rows for our table with fetched datas
                 tableOptions.rows = collection;
