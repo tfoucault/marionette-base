@@ -12,17 +12,26 @@ var path = require('path');
 // ==> Mocking our server side pagination
 app.get('/test/data', function (req, res) {
 
-    var page_size = req.query.page_size;
-    var current_page = req.query.current_page;
+    var pageSize = req.query.page_size;
+    var currentPage = req.query.current_page;
     var chunkedArray;
 
-    if(typeof(page_size) != 'undefined' && page_size != null) {
-        chunkedArray = _.chunk(datas, page_size);
+    if(typeof(pageSize) != 'undefined' && pageSize != null) {
+        chunkedArray = _.chunk(datas, pageSize);
     } else {
         chunkedArray = _.chunk(datas, 10);
     }
 
-    res.json(chunkedArray[current_page]);
+    // Headers for pagination informations
+    var totalPages = Math.floor(datas.length / pageSize);
+    if(datas.length % pageSize > 0) {
+        ++totalPages;
+    }
+
+    res.set('Total-Pages', totalPages);
+    res.set('Current-Page', currentPage);
+
+    res.json(chunkedArray[currentPage - 1]);
 });
 
 // Serves the main file index.html

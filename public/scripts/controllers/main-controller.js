@@ -32,7 +32,10 @@ define(['marionette','backbone.radio','views/main-view','views/modal-view','coll
                     {label: 'Age', target: 'age'},
                     {label: 'Repartition', target: 'balance'},
                     {label: 'Photo', target: 'picture'}
-                ]
+                ],
+                pagination: {
+                    interval: 5
+                }
             };
 
             var tableCollection = new Datas([]);

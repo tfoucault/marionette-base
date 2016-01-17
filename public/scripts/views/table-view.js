@@ -43,10 +43,10 @@ define(['marionette','backbone.radio','templates','fixed-header'], function(Mari
             var sortClass = "";
             var sortOrder = "";
 
-            if(this.options.sortOrder == 1) {
+            if(this.options.order == 1) {
                 sortOrder = "asc";
                 sortClass = "fa fa-sort-amount-asc"
-            } else if(this.options.sortOrder == -1) {
+            } else if(this.options.order == -1) {
                 sortOrder = "desc";
                 sortClass = "fa fa-sort-amount-desc";
             } else {
