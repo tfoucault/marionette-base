@@ -18,7 +18,8 @@ define(['marionette','backbone.radio','templates','fixed-header'], function(Mari
         },
 
         events: {
-            "click thead a": "toggleSort"
+            "click thead a": "toggleSort",
+            "click .page-action": "actionPage"
         },
 
         // Display table with options
@@ -43,10 +44,10 @@ define(['marionette','backbone.radio','templates','fixed-header'], function(Mari
             var sortClass = "";
             var sortOrder = "";
 
-            if(this.options.order == 1) {
+            if(this.options.sortOrder == 1) {
                 sortOrder = "asc";
                 sortClass = "fa fa-sort-amount-asc"
-            } else if(this.options.order == -1) {
+            } else if(this.options.sortOrder == -1) {
                 sortOrder = "desc";
                 sortClass = "fa fa-sort-amount-desc";
             } else {
@@ -74,6 +75,12 @@ define(['marionette','backbone.radio','templates','fixed-header'], function(Mari
             }
 
             tableChannel.trigger('sort',{table: this.cid, field: sortField, order: sortOrder});
+        },
+
+        actionPage: function(e) {
+            var el = e.target || e.srcElement();
+            var pageAction = $(el).data('page-action');
+            tableChannel.trigger('page', {table: this.cid, action: pageAction});
         }
     });
 

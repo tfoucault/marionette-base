@@ -24,8 +24,8 @@
     </tbody>
 </table>
 <ul class="pagination">
-    <li><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
-    <li><a href="#"><i class="fa fa-angle-left"></i></a></li>
+    <li><a href="#" class="page-action fa fa-angle-double-left" data-page-action="{{pagination.actions.FIRST}}"></a></li>
+    <li><a href="#" class="page-action fa fa-angle-left" data-page-action="{{pagination.actions.PREVIOUS}}"></a></li>
     {{#each pagination.pages}}
         {{#if current}}
             <li class="active"><a href="#" data-page-number="{{value}}">{{label}}</a> </li>
@@ -33,6 +33,6 @@
             <li><a href="#" data-page-number="{{value}}">{{label}}</a> </li>
         {{/if}}
     {{/each}}
-    <li><a href="#"><i class="fa fa-angle-right"></i></a></li>
-    <li><a href="#"><i class="fa fa-angle-double-right"></i></a></li>
+    <li><a href="#" class="page-action fa fa-angle-right" data-page-action="{{pagination.actions.NEXT}}"></a></li>
+    <li><a href="#" class="page-action fa fa-angle-double-right" data-page-action="{{pagination.actions.LAST}}"></a></li>
 </ul>

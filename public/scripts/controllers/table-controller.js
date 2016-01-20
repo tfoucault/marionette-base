@@ -10,6 +10,16 @@ define(['marionette','backbone.radio','../views/table-view'], function(Marionett
      */
     var DEFAULT_PAGINATION_INTERVAL = 5;
 
+    /*
+     Constants for pagination action
+     */
+    var PAGE_ACTIONS = {
+        FIRST: 'first',
+        PREVIOUS: 'previous',
+        NEXT: 'next',
+        LAST: 'last'
+    };
+
     var tableChannel = Radio.channel('table');
 
     var TableController = Marionette.Object.extend({
@@ -20,6 +30,7 @@ define(['marionette','backbone.radio','../views/table-view'], function(Marionett
 
             this.listenTo(tableChannel, 'init', this.init);
             this.listenTo(tableChannel, 'sort', this.sort);
+            this.listenTo(tableChannel, 'page', this.page);
         },
 
         init: function(params) {
@@ -50,7 +61,7 @@ define(['marionette','backbone.radio','../views/table-view'], function(Marionett
             // Pagination options
             if(params.options.pagination) {
 
-                // Check interval
+                // Check if interval option is not null
                 if(!params.options.pagination.interval) {
                     tableOptions.pagination.interval = DEFAULT_PAGINATION_INTERVAL;
                 }
@@ -60,6 +71,8 @@ define(['marionette','backbone.radio','../views/table-view'], function(Marionett
                     interval: DEFAULT_PAGINATION_INTERVAL
                 };
             }
+
+            tableOptions.pagination.actions = PAGE_ACTIONS;
 
             // Get region where to display table
             var tableRegion = params.region;
@@ -72,7 +85,7 @@ define(['marionette','backbone.radio','../views/table-view'], function(Marionett
 
             /* When collection is fetched, show the populated paginated table
              -- If we use fetch on pageable collection, it get the page which
-             is defined in the pageable collection, by order of prioroty :
+             is defined in the pageable collection, by order of priority :
              1 - state.currentPage if defined
              2 - state.firstPage if defined and currentPage not defined
              3 - default value 1 if firstPage and currentPage not defined
@@ -82,28 +95,9 @@ define(['marionette','backbone.radio','../views/table-view'], function(Marionett
 
             tableCollection.fetch().done(function(collection, status, response) {
 
-                var interval = tableOptions.pagination.interval;
-                var pageNumber = parseInt(response.getResponseHeader('Current-Page'));
+                // Total pages for pagination
                 var totalPages = parseInt(response.getResponseHeader('Total-Pages'));
-                var intervalNumber = Math.ceil(pageNumber / interval);
-                var intervalMin = (intervalNumber-1) * interval + 1;
-                var intervalMax = intervalNumber * interval;
-                tableOptions.pagination.pages = [];
-
-                for(var i=intervalMin; i<=intervalMax && i<= totalPages; ++i) {
-                    tableOptions.pagination.pages.push({
-                        label: i,
-                        value: i,
-                        current: i == pageNumber ? true : false
-                    });
-                }
-
-                // Set rows for our table with fetched datas
-                tableOptions.rows = collection;
-
-                // Get sortKey and order from our pageable collection
-                tableOptions.sortKey = tableCollection.state.sortKey;
-                tableOptions.order = tableCollection.state.order;
+                tableOptions.pagination.total = totalPages;
 
                 // Create a new table view with specified options
                 var tableView = new TableView(tableOptions);
@@ -115,6 +109,14 @@ define(['marionette','backbone.radio','../views/table-view'], function(Marionett
 
                 // Display populated table
                 tableRegion.show(tableView);
+
+                // Initialize pagination
+                _this.setPagination(_this.tables[tableView.cid]);
+
+                // Initial sorting and render
+                _this.doSort(_this.tables[tableView.cid], tableCollection.state.sortKey, tableCollection.state.order);
+
+                // Render
                 tableView.render();
             });
         },
@@ -123,18 +125,101 @@ define(['marionette','backbone.radio','../views/table-view'], function(Marionett
 
             var sortOrder = params.order;
             var sortField = params.field;
-            var sortTable = params.table;
+            var _tableCID = params.table;
 
             // Get table and collection
-            var tableView = this.tables[sortTable].view;
-            var tableCollection = this.tables[sortTable].collection;
+            var table = this.getTable(_tableCID);
+            // Set sorting
+            table.collection.setSorting(sortField, sortOrder);
+            // Sort
+            this.doSort(table, sortField, sortOrder);
+            // Render
+            table.view.render();
+        },
 
-            tableCollection.setSorting(sortField, sortOrder);
-            tableCollection.sort();
-            tableView.options.rows = tableCollection.toJSON();
-            tableView.options.sortField = tableCollection.state.sortKey;
-            tableView.options.sortOrder = tableCollection.state.order;
-            tableView.render();
+        doSort: function(table, sortField, sortOrder) {
+
+            table.collection.sort();
+            table.view.options.rows = table.collection.toJSON();
+            table.view.options.sortField = sortField;
+            table.view.options.sortOrder = sortOrder;
+        },
+
+        setPagination: function(table) {
+
+            var interval = table.view.options.pagination.interval;
+            var pageNumber = table.collection.state.currentPage;
+            var totalPages = table.view.options.pagination.total;
+            var intervalNumber = Math.ceil(pageNumber / interval);
+            var intervalMin = (intervalNumber-1) * interval + 1;
+            var intervalMax = intervalNumber * interval;
+            table.view.options.pagination.pages = [];
+
+            for(var i=intervalMin; i<=intervalMax && i<= totalPages; ++i) {
+                table.view.options.pagination.pages.push({
+                    label: i,
+                    value: i,
+                    current: i == pageNumber ? true : false
+                });
+            }
+        },
+
+        page: function(params) {
+
+            var pageAction = params.action;
+            var _tableCID_ = params.table;
+
+            // Get table and collection
+            var table = this.getTable(_tableCID_);
+
+            // Get the current page
+            var currentPage = table.collection.state.currentPage;
+            var totalPages = table.view.options.pagination.total;
+            var targetPage = null;
+
+            switch(pageAction) {
+                case PAGE_ACTIONS.FIRST:
+                    targetPage = 1;
+                break;
+                case PAGE_ACTIONS.PREVIOUS:
+                    targetPage = currentPage > 1 ? currentPage - 1 : currentPage;
+                break;
+                case PAGE_ACTIONS.NEXT:
+                    targetPage = currentPage == totalPages ? totalPages : currentPage + 1;
+                break;
+                case PAGE_ACTIONS.LAST:
+                    targetPage = totalPages;
+                break;
+                default:
+            }
+
+            // Keep the context
+            var _this = this;
+
+            table.collection.getPage(targetPage).done(function(collection, status, response) {
+
+                // Initialize pagination
+                _this.setPagination(table);
+
+                // Initial sorting and render
+                _this.doSort(table, table.collection.state.sortKey, table.collection.state.order);
+
+                // Render
+                table.view.render();
+            });
+        },
+
+        /*
+        Private function to get table and collection from cid
+         */
+        getTable: function(cid) {
+
+            var tableView = this.tables[cid].view;
+            var tableCollection = this.tables[cid].collection;
+            return {
+                view: tableView,
+                collection: tableCollection
+            };
         }
     });
 
