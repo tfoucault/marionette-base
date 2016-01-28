@@ -2,8 +2,7 @@
  * Created by tfoucault on 13/12/2015.
  */
 
-
-define(['marionette','backbone.radio','views/main-view','views/modal-view','collections/datas'], function(Marionette, Radio, MainView, ModalView, Datas) {
+define(['marionette','backbone.radio','views/main-view','views/modal-view'], function(Marionette, Radio, MainView, ModalView) {
     "use strict";
 
     var tableChannel = Radio.channel('table');
@@ -27,20 +26,25 @@ define(['marionette','backbone.radio','views/main-view','views/modal-view','coll
             var tableRegion = this.mainView.getRegion('tableRegion');
 
             var tableOptions = {
+                url: '/test/data',
                 columns: [
-                    {label: 'Couleur', target: 'eyeColor'},
-                    {label: 'Age', target: 'age'},
-                    {label: 'Repartition', target: 'balance'},
-                    {label: 'Photo', target: 'picture'}
+                    {label: 'Couleur', key: 'eyeColor', sortable: true},
+                    {label: 'Age', key: 'age', sortable: true},
+                    {label: 'Repartition', key: 'balance', sortable: true},
+                    {label: 'Photo', key: 'picture', sortable: true}
                 ],
+                sort: {
+                    key: 'age',
+                    order: 'desc'
+                },
+                pageSize: 15,
                 pagination: {
                     interval: 5
-                }
+                },
+                mode: 'server'
             };
 
-            var tableCollection = new Datas([]);
-
-            tableChannel.trigger('init',{region: tableRegion, options: tableOptions, collection: tableCollection});
+            tableChannel.trigger('init',{region: tableRegion, options: tableOptions});
         },
 
         showModal: function() {

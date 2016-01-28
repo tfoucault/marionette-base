@@ -9,29 +9,52 @@ var datas = require('./mock-datas');
 var _ = require('lodash');
 var path = require('path');
 
+// Default page size
+var DEFAUL_PAGE_SIZE = 10;
+
 // ==> Mocking our server side pagination
 app.get('/test/data', function (req, res) {
 
+    // Get the query param
+    var order = req.query.order;
+    var sortKey = req.query.sort_key;
+
+    // If sort key and sort order are defined, sort datas
+    if(typeof(sortKey) != 'undefined' && sortKey != null
+        && typeof(order) != 'undefined' && order != null) {
+
+        datas = _.orderBy(datas, [sortKey], [order]);
+    }
+
     var pageSize = req.query.page_size;
     var currentPage = req.query.current_page;
-    var chunkedArray;
 
-    if(typeof(pageSize) != 'undefined' && pageSize != null) {
+    // If pagination is required
+    if(typeof(currentPage) != 'undefined' && currentPage != null) {
+
+        // Data to return
+        var chunkedArray;
+
+        // If no page size defined, apply our default page size
+        if(typeof(pageSize) == 'undefined' || pageSize == null) {
+            pageSize = DEFAUL_PAGE_SIZE;
+        }
+
+        // Header to give information about total page count
+        var totalPages = Math.floor(datas.length / pageSize);
+        if(datas.length % pageSize > 0) {
+            ++totalPages;
+        }
+        res.set('Page-Count', totalPages);
+        res.set('Current-Page', currentPage);
+
         chunkedArray = _.chunk(datas, pageSize);
+        res.json(chunkedArray[currentPage - 1]);
+
     } else {
-        chunkedArray = _.chunk(datas, 10);
+        // No pagination
+        res.json(datas);
     }
-
-    // Headers for pagination informations
-    var totalPages = Math.floor(datas.length / pageSize);
-    if(datas.length % pageSize > 0) {
-        ++totalPages;
-    }
-
-    res.set('Total-Pages', totalPages);
-    res.set('Current-Page', currentPage);
-
-    res.json(chunkedArray[currentPage - 1]);
 });
 
 // Serves the main file index.html
@@ -48,3 +71,8 @@ app.use(express.static('public'));
 app.listen(3000, function () {
     console.log('Example app listening on port 3000!');
 });
+
+/**
+ * Utility function
+ */
+

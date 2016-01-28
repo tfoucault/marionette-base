@@ -19,16 +19,17 @@ define(['marionette','backbone.radio','templates','fixed-header'], function(Mari
 
         events: {
             "click thead a": "toggleSort",
-            "click .page-action": "actionPage"
+            "click .page-action": "actionPage",
+            "click .page-number": "numberPage"
         },
 
         // Display table with options
         render: function() {
 
             // If targets, keep only targeted field ordered by set columns
-            if(this.options.columns.hasTargets) {
+            if(this.options.columns.hasKeys) {
                 this.options.rows = _.map(this.options.rows, function(row){
-                    return _.pick(row, _.pluck(this.options.columns, 'target'));
+                    return _.pick(row, _.pluck(this.options.columns, 'key'));
                 }, this);
             }
 
@@ -44,19 +45,19 @@ define(['marionette','backbone.radio','templates','fixed-header'], function(Mari
             var sortClass = "";
             var sortOrder = "";
 
-            if(this.options.sortOrder == 1) {
-                sortOrder = "asc";
-                sortClass = "fa fa-sort-amount-asc"
-            } else if(this.options.sortOrder == -1) {
+            if(this.options.sort.order == 'desc') {
                 sortOrder = "desc";
-                sortClass = "fa fa-sort-amount-desc";
+                sortClass = "fa fa-sort-amount-desc"
+            } else if(this.options.sort.order == 'asc') {
+                sortOrder = "asc";
+                sortClass = "fa fa-sort-amount-asc";
             } else {
                 sortOrder = "any";
                 sortClass = "fa fa-sort";
             }
 
             // Initialization of sorted columns
-            $('[data-sort-field="' + this.options.sortField + '"]')
+            $('[data-sort-field="' + this.options.sort.key + '"]')
                 .data('sort-order', sortOrder)
                 .next().removeClass().addClass(sortClass);
         },
@@ -69,9 +70,9 @@ define(['marionette','backbone.radio','templates','fixed-header'], function(Mari
 
             // Toggle the sort direction
             if(sortOrder == 'asc') {
-                sortOrder = -1;
-            } else {
                 sortOrder = 1;
+            } else {
+                sortOrder = -1;
             }
 
             tableChannel.trigger('sort',{table: this.cid, field: sortField, order: sortOrder});
@@ -81,6 +82,12 @@ define(['marionette','backbone.radio','templates','fixed-header'], function(Mari
             var el = e.target || e.srcElement();
             var pageAction = $(el).data('page-action');
             tableChannel.trigger('page', {table: this.cid, action: pageAction});
+        },
+
+        numberPage: function(e) {
+            var el = e.target || e.srcElement();
+            var pageNumber = $(el).data('page-number');
+            tableChannel.trigger('page', {table: this.cid, action: pageNumber});
         }
     });
 

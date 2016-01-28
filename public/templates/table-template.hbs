@@ -5,7 +5,7 @@
             <th>#</th>
             {{#each columns}}
                 <th>
-                    <a class="col-header" data-sort-field="{{target}}" data-sort-order="any">{{label}}</a>
+                    <a class="col-header" data-sort-field="{{key}}" data-sort-order="any">{{label}}</a>
                     <i class="fa fa-sort"></i>
                 </th>
             {{/each}}
@@ -28,9 +28,9 @@
     <li><a href="#" class="page-action fa fa-angle-left" data-page-action="{{pagination.actions.PREVIOUS}}"></a></li>
     {{#each pagination.pages}}
         {{#if current}}
-            <li class="active"><a href="#" data-page-number="{{value}}">{{label}}</a> </li>
+            <li class="active"><a href="#" class="page-number" data-page-number="{{value}}">{{label}}</a> </li>
         {{else}}
-            <li><a href="#" data-page-number="{{value}}">{{label}}</a> </li>
+            <li><a href="#" class="page-number" data-page-number="{{value}}">{{label}}</a> </li>
         {{/if}}
     {{/each}}
     <li><a href="#" class="page-action fa fa-angle-right" data-page-action="{{pagination.actions.NEXT}}"></a></li>

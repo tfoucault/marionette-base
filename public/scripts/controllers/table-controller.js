@@ -2,13 +2,17 @@
  * Created by tfoucault on 10/12/2015.
  */
 
-define(['marionette','backbone.radio','../views/table-view'], function(Marionette, Radio, TableView) {
+define(['marionette','backbone.radio', '../collections/table-collection', '../views/table-view'], function(Marionette, Radio, TableCollection, TableView) {
     "use strict";
 
     /**
      * Default values for table params
      */
     var DEFAULT_PAGINATION_INTERVAL = 5;
+
+    var DEFAULT_PAGE_SIZE = 10;
+
+    var DEFAULT_MODE = 'server';
 
     /*
      Constants for pagination action
@@ -35,8 +39,24 @@ define(['marionette','backbone.radio','../views/table-view'], function(Marionett
 
         init: function(params) {
 
-            // Copy of option to keep a ref
+            // Copy of option to keep a reference on it
             var tableOptions = _.clone(params.options);
+
+            // Check that url is defined to load datas
+            if(!params.options.url) {
+                console.log('Url is mandatory in order to get data from server');
+                return;
+            }
+
+            // Check if mode is defined
+            if(!params.options.mode) {
+                tableOptions.mode = DEFAULT_MODE;
+            }
+
+            // Check if page size is defined
+            if(!params.options.pageSize) {
+                tableOptions.pageSize = DEFAULT_PAGE_SIZE;
+            }
 
             // Check that if columns are described, all
             // have a label to display, otherwise, dont
@@ -47,12 +67,14 @@ define(['marionette','backbone.radio','../views/table-view'], function(Marionett
                     tableOptions.columns.hasLabels = true;
                 } else {
                     console.log('Columns configuration is not valid. All columns need a label !');
+                    return;
                 }
 
-                if((_.pluck(params.options.columns, 'target')).length === params.options.columns.length) {
-                    tableOptions.columns.hasTargets = true;
+                if((_.pluck(params.options.columns, 'key')).length === params.options.columns.length) {
+                    tableOptions.columns.hasKeys = true;
                 } else {
-                    console.log('Columns configuration is not valid. All columns need a target !');
+                    console.log('Columns configuration is not valid. All columns need a key !');
+                    return;
                 }
             } else {
                 tableOptions.columns = {};
@@ -77,8 +99,36 @@ define(['marionette','backbone.radio','../views/table-view'], function(Marionett
             // Get region where to display table
             var tableRegion = params.region;
 
-            // Get collection linked to this table
-            var tableCollection = params.collection;
+            // State for pageable collection initialization
+            tableOptions.state = {
+                pageSize: tableOptions.pageSize
+            };
+
+            if(params.options.sort && params.options.sort.key) {
+                tableOptions.state.sortKey = params.options.sort.key;
+            }
+
+            if(params.options.sort && params.options.sort.order) {
+                switch(params.options.sort.order) {
+                    case 'desc':
+                        tableOptions.state.order = '1';
+                    break;
+                    case 'asc':
+                    default:
+                        tableOptions.state.order = '-1';
+                }
+            }
+
+            if(!params.options.sort) {
+                tableOptions.sort = {};
+            }
+
+            // Create a new collection for this table
+            var tableCollection = new TableCollection({
+                url: tableOptions.url,
+                mode: tableOptions.mode,
+                state: tableOptions.state
+            });
 
             // Keep reference on this
             var _this = this;
@@ -95,13 +145,25 @@ define(['marionette','backbone.radio','../views/table-view'], function(Marionett
 
             tableCollection.fetch().done(function(collection, status, response) {
 
-                // Total pages for pagination
-                var totalPages = parseInt(response.getResponseHeader('Total-Pages'));
-                tableOptions.pagination.total = totalPages;
+                var pageCount = 1;
+
+                // Get total pages number for pagination
+                if(tableOptions.mode == 'client') {
+                    // We get all the collection, so number of page is :
+                    pageCount = Math.floor(collection.length / tableOptions.pageSize);
+                    if(collection.length % tableOptions.pageSize > 0) {
+                        ++pageCount;
+                    }
+                } else {
+                    pageCount = parseInt(response.getResponseHeader('Page-Count'));
+                }
+
+                tableOptions.pagination.count = pageCount;
 
                 // Create a new table view with specified options
                 var tableView = new TableView(tableOptions);
 
+                // Register table in table list
                 _this.tables[tableView.cid] = {
                     view: tableView,
                     collection: tableCollection
@@ -110,14 +172,7 @@ define(['marionette','backbone.radio','../views/table-view'], function(Marionett
                 // Display populated table
                 tableRegion.show(tableView);
 
-                // Initialize pagination
-                _this.setPagination(_this.tables[tableView.cid]);
-
-                // Initial sorting and render
-                _this.doSort(_this.tables[tableView.cid], tableCollection.state.sortKey, tableCollection.state.order);
-
-                // Render
-                tableView.render();
+                _this.loadTable(_this.tables[tableView.cid]);
             });
         },
 
@@ -133,23 +188,34 @@ define(['marionette','backbone.radio','../views/table-view'], function(Marionett
             table.collection.setSorting(sortField, sortOrder);
             // Sort
             this.doSort(table, sortField, sortOrder);
-            // Render
-            table.view.render();
         },
 
         doSort: function(table, sortField, sortOrder) {
 
-            table.collection.sort();
-            table.view.options.rows = table.collection.toJSON();
-            table.view.options.sortField = sortField;
+            table.view.options.sort = {
+                key: sortField,
+                order: sortOrder == -1 ? 'asc' : 'desc'
+            };
+
             table.view.options.sortOrder = sortOrder;
+
+            if(table.view.options.mode == 'client') {
+                table.collection.fullCollection.sort();
+                this.loadRows(table);
+            } else {
+                // Get current page with new sorting
+                var _this = this;
+                table.collection.fetch().done(function() {
+                    _this.loadRows(table);
+                });
+            }
         },
 
         setPagination: function(table) {
 
             var interval = table.view.options.pagination.interval;
             var pageNumber = table.collection.state.currentPage;
-            var totalPages = table.view.options.pagination.total;
+            var totalPages = table.view.options.pagination.count;
             var intervalNumber = Math.ceil(pageNumber / interval);
             var intervalMin = (intervalNumber-1) * interval + 1;
             var intervalMax = intervalNumber * interval;
@@ -174,7 +240,7 @@ define(['marionette','backbone.radio','../views/table-view'], function(Marionett
 
             // Get the current page
             var currentPage = table.collection.state.currentPage;
-            var totalPages = table.view.options.pagination.total;
+            var totalPages = table.view.options.pagination.count;
             var targetPage = null;
 
             switch(pageAction) {
@@ -191,22 +257,22 @@ define(['marionette','backbone.radio','../views/table-view'], function(Marionett
                     targetPage = totalPages;
                 break;
                 default:
+                    targetPage = pageAction;
             }
+
+            var _this = this;
 
             // Keep the context
             var _this = this;
 
-            table.collection.getPage(targetPage).done(function(collection, status, response) {
-
-                // Initialize pagination
-                _this.setPagination(table);
-
-                // Initial sorting and render
-                _this.doSort(table, table.collection.state.sortKey, table.collection.state.order);
-
-                // Render
-                table.view.render();
-            });
+            if(table.view.options.mode == 'client') {
+                table.collection.getPage(targetPage);
+                _this.loadTable(table);
+            } else {
+                table.collection.getPage(targetPage).done(function() {
+                    _this.loadTable(table);
+                });
+            }
         },
 
         /*
@@ -220,6 +286,29 @@ define(['marionette','backbone.radio','../views/table-view'], function(Marionett
                 view: tableView,
                 collection: tableCollection
             };
+        },
+
+        /*
+        Private function to reload table view with pagination and order
+         */
+        loadTable: function(table) {
+
+            // Initialize pagination
+            this.setPagination(table);
+
+            if(table.view.options.sort && table.view.options.sort.sortKey && table.view.options.order) {
+                this.doSort(table, table.collection.state.sortKey, table.collection.state.order);
+            } else {
+                this.loadRows(table);
+            }
+        },
+
+        /*
+        Private function to reload only row in table
+         */
+        loadRows: function(table) {
+            table.view.options.rows = table.collection.toJSON();
+            table.view.render();
         }
     });
 
